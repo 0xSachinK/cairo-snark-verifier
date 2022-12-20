@@ -1,0 +1,10 @@
+node_modules/
+circuit.r1cs
+proof.json
+public.json
+artifacts/
+cache/
+l2/build/
+l2/.protostar_cache
+.DS_Store
+ptau-files/powersOfTau28_hez_final_17.ptau

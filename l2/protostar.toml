@@ -1,0 +1,7 @@
+[project]
+protostar-version = "0.8.1"
+lib-path = "lib"
+cairo-path = ["./lib/cairo_alt_bn128"]
+
+[contracts]
+Verifier = ["contracts/lambda_verifier_groth16.cairo"]
