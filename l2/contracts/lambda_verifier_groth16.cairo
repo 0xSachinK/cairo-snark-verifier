@@ -59,6 +59,7 @@ func BuildG2Point{range_check_ptr: felt}(
     let C: BigInt3 = BigInt3(c1, c2, c3);
     let D: BigInt3 = BigInt3(d1, d2, d3);
 
+    // Why is it B, A?
     let x: FQ2 = FQ2(B, A);
     let y: FQ2 = FQ2(D, C);
 
@@ -67,12 +68,16 @@ func BuildG2Point{range_check_ptr: felt}(
 
 // Returns negated BigInt3
 func negateBigInt3{range_check_ptr: felt}(n: BigInt3) -> (r: BigInt3) {
+    // file: ./prepare_verifier.py
+    // negate_prime = "21888242871839275222246405745257275088696311157297823662689037894645226208583"
+    // print(split_to_bigint3(negate_prime))
+
     let (_, nd0) = unsigned_div_rem(n.d0, 60193888514187762220203335);
     let d0 = 60193888514187762220203335 - nd0;
-    let (_, nd1) = unsigned_div_rem(n.d1, 104997207448309323063248289);
-    let d1 = 104997207448309323063248289 - nd1;
-    let (_, nd2) = unsigned_div_rem(n.d2, 3656382694611191768777987);
-    let d2 = 3656382694611191768777987 - nd2;
+    let (_, nd1) = unsigned_div_rem(n.d1, 27625954992973055882053025);
+    let d1 = 27625954992973055882053025 - nd1;
+    let (_, nd2) = unsigned_div_rem(n.d2, 3656382694611191768777988);
+    let d2 = 3656382694611191768777988 - nd2;
 
     return (BigInt3(d0, d1, d2),);
 }
@@ -166,6 +171,7 @@ func verifyingKey{range_check_ptr: felt}() -> (vk: VerifyingKey) {
     return (vk=VerifyingKey(alfa1, beta2, gamma2, delta2, IC, IC_length));
 }
 
+
 // Computes the linear combination for vk_x
 func vk_x_linear_combination{range_check_ptr: felt}(
     vk_x: G1Point, input: BigInt3*, position: felt, length: felt, IC: G1Point*
@@ -190,6 +196,7 @@ func verify{range_check_ptr: felt}(input: BigInt3*, proof: Proof, input_len: fel
     let vk_x: G1Point = ec_add(computed_vk_x, vk.IC[0]);
 
     let neg_proof_A: G1Point = negate(proof.A);
+    // negation is handled in the pairings function
     return pairingProd4(
         neg_proof_A, proof.B, vk.alfa1, vk.beta2, vk_x, vk.gamma2, proof.C, vk.delta2
     );
@@ -237,5 +244,6 @@ func verifyProof{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr
 
     let proof: Proof = Proof(A, B, C);
     let result: felt = verify(big_input, proof, input_len);
+    // What about negating here?
     return (result,);
 }

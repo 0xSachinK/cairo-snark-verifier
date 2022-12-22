@@ -1,5 +1,5 @@
 import json
-from word_utils import split_nums_to_bigint3
+from word_utils import split_nums_to_bigint3, split_to_bigint3
 
 with open("../circuit/verification_key.json", "r") as f:
     data = json.loads(f.read())
@@ -25,6 +25,23 @@ IC = data['IC']
 #     out_string += f"\nassert IC[{i}] = G1Point(Uint256{split_to_uint256(ic[0])}, Uint256{split_to_uint256(ic[1])});"
 
 # print(out_string)
+
+# Check negate prime
+negate_prime = "21888242871839275222246405745257275088696311157297823662689037894645226208583"
+print(split_to_bigint3(negate_prime))
+
+
+g2_points = [
+    11559732032986387107991004021392285783925812861821192530917403151452391805634,
+    10857046999023057135944570762232829481370756359578518086990519993285655852781,
+    4082367875863433681332203403145435568316851327593401208105741076214120093531,
+    8495653923123431417604973247489272438418190587263600148770280649306958101930
+]
+ns = split_nums_to_bigint3(g2_points)
+hs = [hex(n) for n in ns]
+print(hs)
+
+        
 
 out_string = f"""
 let (alfa1) = BuildG1Point{split_nums_to_bigint3(alpha1[:-1])};
